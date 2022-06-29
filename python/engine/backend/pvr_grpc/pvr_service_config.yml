@@ -1,0 +1,6 @@
+        base_name: /home/img/models/EfficientNetB0/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro
+#input_name: x
+#batch_size: 1
+#output_file_name: tvm_infer_0_out_0.bin
+#output_shape: [1000]
+

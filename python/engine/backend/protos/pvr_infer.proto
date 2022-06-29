@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pvr;
+
+service PVRInfer	{
+	// detect the server
+    rpc FindService(FindServiceRequest) returns (FindServiceResponse)	{}
+
+	// invoke inference after server found
+	rpc Inference(InferRequest) returns (InferResponse) {}
+}
+
+message FindServiceRequest {
+	string service_name = 1;
+}
+
+message FindServiceResponse {
+	string service_ack = 1;
+}
+
+message Tensor	{
+	string name = 1;
+	bytes data = 2;
+}
+
+message InferRequest  {
+	Tensor input = 1;
+}
+
+message InferResponse	{
+	repeated Tensor outputs = 1;
+}

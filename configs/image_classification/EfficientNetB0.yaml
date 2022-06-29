@@ -1,0 +1,98 @@
+# global configs
+Global:
+  mode: eval
+  category: classification
+  output_dir: ./output/
+  save_interval: 1
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 360
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: [3, 224, 224]
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: EfficientNetB0
+  backend: powervr_grpc   #clas_sim, paddle, powervr
+  PowerVR:
+    base_name: ./model/powervr/EfficientNetB0/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro
+    input_name: x
+    batch_size: 1
+    output_file_name: tvm_infer_0_out_0.bin
+    output_shape: [1000]
+  PowerVR_gRPC:
+    pvr_server: 192.168.10.4
+    input_name: x
+    batch_size: 1
+    output_shape: [1000]
+  Paddle:
+    device: gpu
+    path: model/paddle/PaddleClas/EfficientNetB0
+    base_name: inference 
+  ClasSim:
+    class_num: 10
+
+# data loader for train and eval
+DataLoader:
+  Eval:
+    dataset: 
+      name: ImageNetDataset
+      image_root: ./dataset/cifar-10/testImageSet
+      cls_label_path: ./dataset/cifar-10/cifar_10_test_labels.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - ResizeImage:
+            resize_short: 256
+        - CropImage:
+            size: 224
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
+            order: ''
+    sampler:
+      name: BatchSampler
+      batch_size: 1
+      drop_last: False
+      shuffle: False
+    loader:
+      reserved: None
+
+Infer:
+  infer_imgs: dataset/inference/whl_demo.jpg
+  batch_size: 1
+  transforms:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        resize_short: 256
+    - CropImage:
+        size: 224
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+        order: ''
+    - ToCHWImage:
+        #PostProcess:
+        #- Topk:
+        #topk: 5
+        #class_id_map_file: python/utils/imagenet1k_label_list.txt
+  PostProcess:
+    name: Topk
+    topk: 5
+    # relative to directory of running scripts
+    class_id_map_file: python/utils/imagenet1k_label_list.txt
+
+
+Metric:
+  Eval:
+    - TopkAcc:
+        topk: [1, 5]
