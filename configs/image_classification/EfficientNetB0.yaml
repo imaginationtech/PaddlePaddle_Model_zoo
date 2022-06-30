@@ -25,7 +25,7 @@ Model:
     output_file_name: tvm_infer_0_out_0.bin
     output_shape: [1000]
   PowerVR_gRPC:
-    pvr_server: 192.168.10.4
+    pvr_server: 192.168.10.5
     input_name: x
     batch_size: 1
     output_shape: [1000]
