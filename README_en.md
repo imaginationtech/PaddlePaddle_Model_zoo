@@ -10,34 +10,34 @@ This is an Imagination NCSDK enabled PaddlePaddle model zoo. The source model is
 
 
 ## Imagination SW and HW
-HW: Unisoc ROC1
-SW: NCSDK 2.8, NNA DDK 3.4, GPU DDK 1.17
+HW: Unisoc ROC1  
+SW: NCSDK 2.8, NNA DDK 3.4, GPU DDK 1.17  
 
 ## Download models
-sftp server: transfer.imgtec.com
-http client: https://transfer.imgtec.com
-user_name:imgchinalab_public
-password: public
+sftp server: transfer.imgtec.com  
+http client: https://transfer.imgtec.com  
+user_name:imgchinalab_public  
+password: public  
 
 
 ## Running evaluation and inference
 ### Setup
 #### Inference board
-Install NNA, GPU DDK
-Install NCSDK TVM Runtime
-Configure and run innference server
-The compiled model
+Install NNA, GPU DDK  
+Install NCSDK TVM Runtime  
+Configure and run innference server  
+The compiled model  
 
 #### Evaluation machine
-Clone this repo
+Clone this repo  
 
 ### Evaluatin
-Set mode to 'Eval'
-Run run_test_egret.sh
+Set mode to 'Eval'  
+Run run_test_egret.sh  
 
 ### Inference
-Set mode to 'Infer'
-Run run_test_egret.sh
+Set mode to 'Infer'  
+Run run_test_egret.sh  
 
 ## Performance
 ### Image Classification
