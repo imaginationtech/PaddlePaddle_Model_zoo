@@ -1,8 +1,11 @@
 #!/bin/bash
 # run at PaddleClas
 
-ImageNetValRoot=/home/jiansowa/data/imagenet_aiia/valset
-ImageNetValLabel=/home/jiansowa/data/imagenet_aiia/valset/val.txt
+
+#ImageNetValRoot=/home/jiansowa/data/imagenet_aiia/valset
+#ImageNetValLabel=/home/jiansowa/data/imagenet_aiia/valset/val.txt
+ImageNetValRoot=/home/jasonwang/data/imagenet_aiia/valset
+ImageNetValLabel=/home/jasonwang/data/imagenet_aiia/valset/val.txt
 
 Model=EfficientNetB0
 #Model=MobileNetV1_ssld
