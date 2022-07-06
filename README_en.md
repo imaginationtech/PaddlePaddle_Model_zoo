@@ -7,6 +7,19 @@ This is an Imagination NCSDK enabled PaddlePaddle model zoo. The source model is
 
 
 ## System Overview
+This repository could be used as an Evaluation/Inference framework based on different inference backend.
+
+### NCSDK TVM runtime backend
+There are two way to run evaluation on Imagination IPs.
+1. Local inference
+   All code is running on ROC1
+2. Remote inference
+   The runtime system is a distributed system. Dataloader, preprocess, postprocess run on Host. ROC1 only run the NN inference.
+
+### PaddlePaddle inference backend
+Non-quantized performance data is obtained by running evaluation with exported Paddle inference model on Machine with PaddlePaddle installed.
+
+
 
 
 ## Imagination SW and HW
