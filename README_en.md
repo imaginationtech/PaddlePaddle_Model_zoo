@@ -11,7 +11,7 @@ On the repository, we will get models and test program to evaluate the inference
 This repository could be used as an Evaluation/Inference framework based on different inference backend.
 
 ![Local](./docs/images/local_infer.png)  
-<center>Fig.1 Local inference</center>
+<p align="center">Fig.1 Local inference</p>
 
 ![gRPC](./docs/images/grpc_infer.png)  
 <center>Fig.2 Remote inference</center>
