@@ -5,16 +5,22 @@
 ## Introduction
 This is an Imagination NCSDK enabled PaddlePaddle model zoo. The source model is from PadlePaddle model zoo. Utilize Imagination NCSDK, PaddlePaddle models could be compiled and deployed on device embedded with Imagination computing IPs, such as NNA and GPU.
 
+On the repository, we will get models and test program to evaluate the inference performance.
 
 ## System Overview
 This repository could be used as an Evaluation/Inference framework based on different inference backend.
 
+![Local](./docs/images/local_infer.png)
+<center>Fig.1 Local inference</center>
+![gRPC](./docs/images/grpc_infer.png)
+<center>Fig.2 Remote inference</center>
+
 ### NCSDK TVM runtime backend
 There are two way to run evaluation on Imagination IPs.
 1. Local inference
-   All code is running on ROC1
+   All code is running on ROC1, see Fig.1
 2. Remote inference
-   The runtime system is a distributed system. Dataloader, preprocess, postprocess run on Host. ROC1 only run the NN inference.
+   The runtime system is a distributed system. Dataloader, preprocess, postprocess run on Host. ROC1 only run the NN inference. See Fig.2
 
 ### PaddlePaddle inference backend
 Non-quantized performance data is obtained by running evaluation with exported Paddle inference model on Machine with PaddlePaddle installed.
