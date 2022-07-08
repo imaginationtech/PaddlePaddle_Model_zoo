@@ -12,6 +12,8 @@ This repository could be used as an Evaluation/Inference framework based on diff
 
 ![Local](./docs/images/local_infer.png)  
 <center>Fig.1 Local inference</center>  
+
+
 ![gRPC](./docs/images/grpc_infer.png)  
 <center>Fig.2 Remote inference</center>  
 
