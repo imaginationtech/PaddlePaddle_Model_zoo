@@ -15,7 +15,7 @@ This repository could be used as an Evaluation/Inference framework based on diff
 <p align="center">Fig.1 Local inference</p>
 </div>
 
-<img src="https://gitee.com/jiansowa/powervr_paddle_model/docs/images/local_infer.png" width="614" height="428")  
+<img src="https://gitee.com/jiansowa/powervr_paddle_model/blob/ee_doc/docs/images/local_infer.png" width="614" height="428")  
 
 <p align="center">Fig.1 Local inference</p>
 
