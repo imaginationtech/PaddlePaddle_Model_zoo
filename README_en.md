@@ -10,13 +10,7 @@ On the repository, we will get models and test program to evaluate the inference
 ## System Overview
 This repository could be used as an Evaluation/Inference framework based on different inference backend.
 
-<div align=center>
-![Local](./docs/images/local_infer.png)  
-<p align="center">Fig.1 Local inference</p>
-</div>
-
-<img src="https://gitee.com/jiansowa/powervr_paddle_model/docs/images/local_infer.png" width="614" height="428")  
-
+<p align='center'>![Local](./docs/images/local_infer.png)</p>
 <p align="center">Fig.1 Local inference</p>
 
 ![gRPC](./docs/images/grpc_infer.png)  
