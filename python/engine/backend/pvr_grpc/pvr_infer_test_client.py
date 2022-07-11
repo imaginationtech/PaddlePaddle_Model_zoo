@@ -14,7 +14,7 @@ def run():
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
     #with grpc.insecure_channel('localhost:50051') as channel:
-    with grpc.insecure_channel('192.168.10.4:50051') as channel:
+    with grpc.insecure_channel('10.80.49.42:50051') as channel:
         stub = pvr_infer_pb2_grpc.PVRInferStub(channel)
 
         request = pvr_infer_pb2.FindServiceRequest()
