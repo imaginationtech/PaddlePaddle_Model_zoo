@@ -80,6 +80,7 @@ Set base_name field in $GRPCServerPath/pvr_service_config.yml, e.g
 |field|description|values|
 |:---:|:---------:|:-----:|
 |base_name|path to vm file|$DeploymentModelPath/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro|
+
 Launch the gRPC server
 ```
 python PVRInferServer.py
@@ -130,7 +131,7 @@ To run test code on host and run inference on target device, set the fields belo
 |Model.PowerVR.input_name|network input name|string|
 |Model.PowerVR.output_shape|shape of output tensor|list|
 
-### Running test scripts
+#### Running test scripts
 ```
 python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 ```
