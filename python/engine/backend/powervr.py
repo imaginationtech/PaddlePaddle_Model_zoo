@@ -4,6 +4,7 @@ import grpc
 
 from .pvr_grpc.generated import pvr_infer_pb2
 from .pvr_grpc.generated import pvr_infer_pb2_grpc
+from .pvr_grpc.pvr_infer_cmd import PowerVR_Infer_Cmdline
 
 class PowerVR_Infer(object):
     def __init__(self, pvr_config):
