@@ -162,4 +162,5 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 
 ## Contribution
 Contributions are highly welcomed and we would really appreciate your feedback!!
+[Code submission through PR](.docs/pr_guide.md)
 
