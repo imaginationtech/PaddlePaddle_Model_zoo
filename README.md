@@ -144,23 +144,21 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 ## Performance
 ### Image Classification
 
-| Model | top-1 | top-5 | time(ms)<br>bs=1 | time(ms)<br>bs=4 | Download<br>Adress |
+| Model | top-1 | top-5 | time(ms)<br>bs=1 | time(ms)<br>bs=4 | Download<br>Address |
 |:----:|:----:|:----:|:----:|:----:|:----:|
-|EfficientNetB0<br>(d16-w16-b16)|75.4|93.2|null|null|[link](sftp://transfer.imgtec.com/paddle_models/EfficientNetB0-AX2185-d16w16b16-ncsdk-2_8_deploy.tar.bz2)|
-|EfficientNetB0<br>(non-quant)|75.9|93.7|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/EfficientNetB0_infer.tar)|
-|EfficientNetB0<br>(d8-w8-b16)|null|null|null|null|[link](sftp://transfer.imgtec.com/paddle_models/EfficientNetB0-AX2185-d8w8b16-ncsdk-2_8_deploy.tar.bz2)|
-|ResNet50<br>(d16-w16-b16)|75.4|93.1|null|null|-|
+|ResNet50<br>(d16-w16-b16)|75.4|93.1|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |ResNet50<br>(non-quant)|75.4|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/ResNet50_infer.tar)|
-|ResNet50<br>(d8-w8-b16)|null|null|null|null|-|
-|MobileNetV3<br>(d16-w16-b16)|75.5|93.6|null|null|-|
-|MobileNetV3<br>(non-quant)|75.4|93.2|null|null|-|
-|MobileNetV3<br>(d8-w8-b16)|null|null|null|null|-|
-|VGG16<br>(d16-w16-b16)|70.9|90.0|null|null|-|
+|ResNet50<br>(d8-w8-b16)|74.6|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|VGG16<br>(d16-w16-b16)|70.9|90.0|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |VGG16<br>(non-quant)|71.1|90.0|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/VGG16_infer.tar)|
-|VGG16<br>(d8-w8-b16)|null|null|null|null|-|
-|DarkNet53<br>(d16-w16-b16)|76.8|93.4|null|null|-|
+|VGG16<br>(d8-w8-b16)|70.3|89.6|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|EfficientNetB0<br>(d16-w16-b16)|75.4|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/EfficientNetB0-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|EfficientNetB0<br>(non-quant)|75.9|93.7|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/EfficientNetB0_infer.tar)|
+|MobileNetV3_large_x1_0<br>(d16-w16-b16)|75.5|93.6|null|null|sftp://transfer.imgtec.com/paddle_models/MobileNetV3-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|MobileNetV3_large_x1_0<br>(non-quant)|75.4|93.2|null|null|https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/MobileNetV3_large_x1_0_infer.tar|
+|DarkNet53<br>(d16-w16-b16)|76.8|93.4|null|null|sftp://transfer.imgtec.com/paddle_models/DarkNet53-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |DarkNet53<br>(non-quant)|76.6|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/DarkNet53_infer.tar)|
-|DarkNet53<br>(d8-w8-b16)|null|null|null|null|-|
+
 
 ## Contribution
 Contributions are highly welcomed and we would really appreciate your feedback!!
