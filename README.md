@@ -76,6 +76,7 @@ Setup development host and deployment target device according to NCSDK documents
 1. Copy python/engine/backend/pvr_grpc/* to GRPCServerPath directory on target devices;  
 2. Copy PowerVR deployment package to DeploymentModelPath;  
 3. Set base_name field in $GRPCServerPath/pvr_service_config.yml, e.g
+
 |field|description|values|
 |:---:|:---------:|:-----:|
 |base_name|path to vm file|$DeploymentModelPath/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro|
