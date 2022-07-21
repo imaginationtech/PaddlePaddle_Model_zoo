@@ -11,13 +11,13 @@ cd powervr_paddle_model
 ## Establish a connection with upstream repository
 we will create a remote connection to the original powervr_paddle_model repository and name it upstream.
 ```
-git remote add upstream https://github.com/PaddlePaddle/PaddleSeg.git
+git remote add upstream https://github.com/jiansowa/powervr_paddle_model
 ```
 
 ## Create a local branch
 You can also create a new branch based on upstream branch, the command is as follows:
 ```
-git checkout -b new_branch upstream/develop
+git checkout -b new_branch upstream/develop2
 ```
 
 ## Modify and submit code

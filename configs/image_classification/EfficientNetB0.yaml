@@ -26,7 +26,7 @@ Model:
     output_shape: [1000]
   PowerVR_gRPC:
     #pvr_server: 192.168.10.4
-    pvr_server: 10.80.49.42
+    pvr_server: 10.80.49.44
     input_name: x
     #batch_size: 1
     output_shape: [1000]
