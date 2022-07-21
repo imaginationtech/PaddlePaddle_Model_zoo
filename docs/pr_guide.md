@@ -17,7 +17,7 @@ git remote add upstream https://github.com/jiansowa/powervr_paddle_model
 ## Create a local branch
 You can also create a new branch based on upstream branch, the command is as follows:
 ```
-git checkout -b new_branch upstream/develop2
+git checkout -b new_branch upstream/develop
 ```
 
 ## Modify and submit code
