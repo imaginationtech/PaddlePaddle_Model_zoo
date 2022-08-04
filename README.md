@@ -10,8 +10,8 @@ We start from models in [PaddleClas](https://github.com/PaddlePaddle/PaddleClas)
 
 ### Imagination HW & SW Tools
 #### Hardware Platform
-Only ROC1 from Unisoc is considered so far.
-HW: Unisoc ROC1  
+Only ROC1 from Unisoc is considered so far.<br>
+HW: Unisoc ROC1
 
 #### Neural Compute SDK
 SW: NCSDK 2.8, NNA DDK 3.4, GPU DDK 1.17  
@@ -35,7 +35,7 @@ password: public
 The test framework support inference mode or evalution mode. It could run the non-quantized PaddlePaddle model or the quantized PowerVR deployment models to evaluate quantization impacts. It also support distributed evaluation utilizing gRPC.
 
 ### Host and Target
-Host: Powerful workstation used to compile models and has PaddlePaddle installed.
+Host: Powerful workstation used to compile models and has PaddlePaddle installed.<br>
 Target: Resource constrained device equipped with Imagination compute IPs.
 
 ### Inference
@@ -67,21 +67,20 @@ Dataloader, preprocess, postprocess, performance metric calcuation run on Host. 
 Setup development host and deployment target device according to NCSDK documents. Make sure basic IMGDNN test pass and tutorial example could be deployed successfully.
 
 #### Development Host
-Install PaddlePaddle
-Compile PaddlePaddle model into PowerVR deployment packages.
-Clone this repository.
-Place evaluation dataset in EvalDatasetPath directory.
+1. Install PaddlePaddle
+2. Compile PaddlePaddle model into PowerVR deployment packages.
+3. Clone this repository.
+4. Place evaluation dataset in EvalDatasetPath directory.
 
 #### Target device
-Copy python/engine/backend/pvr_grpc/* to GRPCServerPath directory on target devices;  
-Copy PowerVR deployment package to DeploymentModelPath;  
-Set base_name field in $GRPCServerPath/pvr_service_config.yml, e.g
+1. Copy python/engine/backend/pvr_grpc/* to GRPCServerPath directory on target devices;  
+2. Copy PowerVR deployment package to DeploymentModelPath;  
+3. Set base_name field in $GRPCServerPath/pvr_service_config.yml, e.g
 
 |field|description|values|
 |:---:|:---------:|:-----:|
 |base_name|path to vm file|$DeploymentModelPath/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro|
-
-Launch the gRPC server
+4. Launch the gRPC server
 ```
 python PVRInferServer.py
 ```
@@ -162,4 +161,5 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 
 ## Contribution
 Contributions are highly welcomed and we would really appreciate your feedback!!
+[Code submission through PR](./docs/pr_guide.md)
 
