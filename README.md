@@ -148,6 +148,9 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 |ResNet50<br>(d16-w16-b16)|75.4|93.1|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |ResNet50<br>(non-quant)|75.4|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/ResNet50_infer.tar)|
 |ResNet50<br>(d8-w8-b16)|74.6|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|HRNet_W48_C_ssld<br>(d16-w16-b16)|81.9|97.0|null|null|sftp://transfer.imgtec.com/paddle_models/HRNet_W48_C_ssld-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|HRNet_W48_C_ssld<br>(non-quant)|82.2|96.9|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/HRNet_W48_C_ssld_infer.tar)|
+|HRNet_W48_C_ssld<br>(d8-w8-b16)|81.2|96.6|null|null|sftp://transfer.imgtec.com/paddle_models/HRNet_W48_C_ssld-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |VGG16<br>(d16-w16-b16)|70.9|90.0|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |VGG16<br>(non-quant)|71.1|90.0|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/VGG16_infer.tar)|
 |VGG16<br>(d8-w8-b16)|70.3|89.6|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
