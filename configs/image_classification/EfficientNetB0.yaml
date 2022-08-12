@@ -42,8 +42,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: ./dataset/cifar-10/testImageSet
-      cls_label_path: ./dataset/cifar-10/cifar_10_test_labels.txt
+      data_root: ./dataset/cifar-10/testImageSet
+      label_path: ./dataset/cifar-10/cifar_10_test_labels.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
