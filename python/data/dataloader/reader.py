@@ -49,9 +49,9 @@ class DataLoader(object):
         for idx in batch_indices:
             data.append(self.dataset[idx][0])
             label.append(self.dataset[idx][1])
-        data = np.array(data)
-        label = np.array(label)
-        return data, label
+        data_batch = self.dataset.create_inputs_batch(data)#np.array(data)
+        label_batch = self.dataset.create_labels_batch(label)#np.array(label)
+        return data_batch, label_batch
 
     def __iter__(self):
         return self
