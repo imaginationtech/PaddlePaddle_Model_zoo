@@ -1,6 +1,6 @@
 # global configs
 Global:
-  mode: eval
+  mode: evaluation    # evaluation, inference
   category: classification
   output_dir: ./output/
   save_interval: 1
@@ -21,13 +21,14 @@ Model:
   PowerVR:
     base_name: ./model/powervr/EfficientNetB0/EfficientNetB0-AX2185-ncsdk-2_8_deploy.ro
     input_name: x
-    batch_size: 1
+    #batch_size: 1
     output_file_name: tvm_infer_0_out_0.bin
     output_shape: [1000]
   PowerVR_gRPC:
-    pvr_server: 192.168.10.4
+    #pvr_server: 192.168.10.4
+    pvr_server: 10.80.49.44
     input_name: x
-    batch_size: 1
+    #batch_size: 1
     output_shape: [1000]
   Paddle:
     device: gpu
@@ -41,8 +42,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: ./dataset/cifar-10/testImageSet
-      cls_label_path: ./dataset/cifar-10/cifar_10_test_labels.txt
+      data_root: ./dataset/cifar-10/testImageSet
+      label_path: ./dataset/cifar-10/cifar_10_test_labels.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True

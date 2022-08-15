@@ -23,8 +23,8 @@ class Egret(object):
         self.config = config
 
         self.mode = self.config['Global']['mode']
-        assert self.mode in ["eval", "infer"], \
-                "engine mode should be 'eval' or 'infer'"
+        assert self.mode in ["evaluation", "inference"], \
+                "engine mode should be 'evaluation' or 'inference'"
         self.category = self.config['Global']['category']
         assert self.category in ['classification'], \
                 "nn category should be 'classification'"
@@ -36,12 +36,12 @@ class Egret(object):
         init_logger(name='root', log_file=log_file)
         print_config(config)
 
-        if self.mode == "eval":
+        if self.mode == "evaluation":
             # build dataloader
             self.eval_dataloader = build_dataloader(self.config["DataLoader"])
             # build metric
             self.init_metrics()
-        elif self.mode == 'infer':
+        elif self.mode == 'inference':
             self.preprocess_ops = build_preprocess(self.config["Infer"][
                 "transforms"])
             self.postprocess_func = build_postprocess(self.config["Infer"][
@@ -58,7 +58,7 @@ class Egret(object):
                 self.eval_metric_func = build_metrics(metric_config)
        
     def eval(self):
-        assert self.mode == "eval"
+        assert self.mode == "evaluation"
         assert self.inference_func is not None
 
         output_info = dict()
@@ -131,7 +131,7 @@ class Egret(object):
         return output_info[metric_key].avg
 
     def infer(self):
-        assert self.mode == "infer" and self.category == "classification"
+        assert self.mode == "inference" and self.category == "classification"
         image_list = get_image_list(self.config["Infer"]["infer_imgs"])
 
         batch_size = self.config["Infer"]["batch_size"]
@@ -160,8 +160,8 @@ class Egret(object):
                 image_file_list.clear()
 
     def run(self):
-        if self.mode == 'eval':
+        if self.mode == 'evaluation':
             self.eval()
-        elif self.mode == 'infer':
+        elif self.mode == 'inference':
             self.infer()
 
