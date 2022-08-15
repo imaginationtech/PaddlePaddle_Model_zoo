@@ -2,7 +2,7 @@ import copy
 from collections import OrderedDict
 import importlib
 
-from .metrics import TopkAcc
+from .metrics import TopkAcc, mIou
 
 
 class CombinedMetrics(object):

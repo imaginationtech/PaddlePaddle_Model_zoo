@@ -1,14 +1,15 @@
 #!/bin/bash
 # run at PaddleClas
-
 #ImageNetValRoot=/home/jiansowa/data/imagenet_aiia/valset
 #ImageNetValLabel=/home/jiansowa/data/imagenet_aiia/valset/val.txt
-ImageNetValRoot=/home/jasonwang/data/imagenet_aiia/valset
-ImageNetValLabel=/home/jasonwang/data/imagenet_aiia/valset/val.txt
+ImageNetValRoot=/home/asa/powervr_test/imagenet_aiia/valset
+ImageNetValLabel=/home/asa/powervr_test/imagenet_aiia/valset/val.txt
 
-
-Model=EfficientNetB0
-#Model=MobileNetV1_ssld
+CityscapesValRoot=/home/asa/PaddleSeg/PaddleSeg/data/leftImg8bit/val
+CityscapesValLabel=/home/asa/PaddleSeg/PaddleSeg/data/gtFine/val
+# Model=EfficientNetB0
+Model=HRNet_Contrast_W48
+# Model=MobileNetV1_ssld
 #Model=MobileNetV2_ssld
 #Model=MobileNetV3_large_ssld
 #Model=MobileNetV3_small_ssld
@@ -16,10 +17,9 @@ Model=EfficientNetB0
 #Model=HRNet_W48_C_ssld
 
 ## 'eval': network(in framework), pretrain parameter; 'infer': inference model
-Mode='run'	
+Mode = 'run'
 #Mode='debug'
-
-if [ $Model == 'EfficientNetB0' ]; then
+if [ $Model == 'HRNet_Contrast_W48' ]; then
   if [ $Mode = 'debug' ]
   then
       printf "Debug mode"

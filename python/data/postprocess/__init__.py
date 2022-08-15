@@ -4,6 +4,7 @@ import importlib
 #from . import topk
 
 from .topk import Topk, MultiLabelTopk
+from .save_image import SaveImages
 
 
 def build_postprocess(config):

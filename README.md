@@ -6,7 +6,7 @@
 This is an Imagination NCSDK enabled PaddlePaddle model zoo, which is part of [Hardware Ecosystem Co-Creation Program](https://www.imaginationtech.com/news/imagination-joins-baidu-paddlepaddle-hardware-ecosystem-co-creation-program/). Take devices that embedded with Imagination computing IPs(such as GPU and NNA) as target, PaddlePaddle inference model is compiled into deployment package utilizing Imagination [Neural Compute SDK(NCSDK)](https://developer.imaginationtech.com/ncsdk/). This repository includes deployment models and test code on these models.
 
 ### PaddlePaddle Models
-We start from models in [PaddleClas](https://github.com/PaddlePaddle/PaddleClas), such as EfficientNet.
+We start from models in [PaddleClas](https://github.com/PaddlePaddle/PaddleClas), such as EfficientNet. The Tutorial of Deployment and Test on models in [PaddleSeg](https://github.com/PaddlePaddle/PaddleSeg), please [click here](./docs/segmentation_guide.md).
 
 ### Imagination HW & SW Tools
 #### Hardware Platform
@@ -94,7 +94,7 @@ Create a config file in Yaml, some fields are described below. Also refer to con
 |Global.mode|test mode|evaluation,inference|
 |Dataloader.dataset.name|dataset class name to be instantialize|ImageNetDataset|
 |Dataloader.dataset.image_root|root directory of imagenet dataset image|string|
-|Dataloader.dataset.cls_label_path|path to file to class_id label|string|
+|Dataloader.dataset.label_path|path to file to class_id label|string|
 |Dataloader.sampler.batch_size|set the batch size of inupt|integer|
 |Infer.infer_imgs|path to test image or directory|string|
 |Infer.batch_size|batch size of inference|interger|
@@ -145,20 +145,20 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 
 | Model | top-1 | top-5 | time(ms)<br>bs=1 | time(ms)<br>bs=4 | Download<br>Address |
 |:----:|:----:|:----:|:----:|:----:|:----|
-|ResNet50<br>(d16-w16-b16)|75.4|93.1|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|ResNet50<br>(d16-w16-b16)|75.4|93.1|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/ResNet50-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |ResNet50<br>(non-quant)|75.4|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/ResNet50_infer.tar)|
-|ResNet50<br>(d8-w8-b16)|74.6|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/ResNet50-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
-|HRNet_W48_C_ssld<br>(d16-w16-b16)|81.9|97.0|null|null|sftp://transfer.imgtec.com/paddle_models/HRNet_W48_C_ssld-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|ResNet50<br>(d8-w8-b16)|74.6|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/ResNet50-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|HRNet_W48_C_ssld<br>(d16-w16-b16)|81.9|97.0|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/HRNet_W48_C_ssld-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |HRNet_W48_C_ssld<br>(non-quant)|82.2|96.9|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/HRNet_W48_C_ssld_infer.tar)|
-|HRNet_W48_C_ssld<br>(d8-w8-b16)|81.2|96.6|null|null|sftp://transfer.imgtec.com/paddle_models/HRNet_W48_C_ssld-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
-|VGG16<br>(d16-w16-b16)|70.9|90.0|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|HRNet_W48_C_ssld<br>(d8-w8-b16)|81.2|96.6|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/HRNet_W48_C_ssld-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|VGG16<br>(d16-w16-b16)|70.9|90.0|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/VGG16-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |VGG16<br>(non-quant)|71.1|90.0|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/VGG16_infer.tar)|
-|VGG16<br>(d8-w8-b16)|70.3|89.6|null|null|sftp://transfer.imgtec.com/paddle_models/VGG16-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
-|EfficientNetB0<br>(d16-w16-b16)|75.4|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/EfficientNetB0-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|VGG16<br>(d8-w8-b16)|70.3|89.6|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/VGG16-AX2185-d8w8b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|EfficientNetB0<br>(d16-w16-b16)|75.4|93.2|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/EfficientNetB0-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |EfficientNetB0<br>(non-quant)|75.9|93.7|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/EfficientNetB0_infer.tar)|
-|MobileNetV3_large_x1_0<br>(d16-w16-b16)|75.5|93.6|null|null|sftp://transfer.imgtec.com/paddle_models/MobileNetV3-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|MobileNetV3_large_x1_0<br>(d16-w16-b16)|75.5|93.6|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/MobileNetV3-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |MobileNetV3_large_x1_0<br>(non-quant)|75.4|93.2|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/MobileNetV3_large_x1_0_infer.tar)|
-|DarkNet53<br>(d16-w16-b16)|76.8|93.4|null|null|sftp://transfer.imgtec.com/paddle_models/DarkNet53-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
+|DarkNet53<br>(d16-w16-b16)|76.8|93.4|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/DarkNet53-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |DarkNet53<br>(non-quant)|76.6|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/DarkNet53_infer.tar)|
 
 

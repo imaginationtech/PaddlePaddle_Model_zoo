@@ -26,8 +26,8 @@ class Egret(object):
         assert self.mode in ["evaluation", "inference"], \
                 "engine mode should be 'evaluation' or 'inference'"
         self.category = self.config['Global']['category']
-        assert self.category in ['classification'], \
-                "nn category should be 'classification'"
+        assert self.category in ['classification','segmentation'], \
+                "nn category should be 'classification' or 'segmentation'"
 
         # init logger
         self.output_dir = self.config['Global']['output_dir']
@@ -108,9 +108,10 @@ class Egret(object):
 
                 ips_msg = "ips: {:.5f} images/sec".format(
                     batch_size / time_info["batch_cost"].avg)
-
+                
+                #output classification result or segmentation result
                 metric_msg = ", ".join([
-                    "{}: {:.5f}".format(key, output_info[key].val)
+                    "{}: {:.5f}".format(key, output_info[key].avg if self.category == 'classification' else output_info[key].val )
                     for key in output_info
                 ])
                 logger.info("[Eval][Iter: {}/{}]{}, {}, {}".format(
@@ -118,9 +119,12 @@ class Egret(object):
                     ips_msg))
 
             tic = time.time()
-
+        
+        #output classification result or segmentation result
         metric_msg = ", ".join([
-            "{}: {:.5f}".format(key, output_info[key].avg) for key in output_info
+            "{}: {:.5f}".format(key, output_info[key].avg if self.category == 'classification' 
+            else output_info[key].val ) 
+            for key in output_info
         ])
         logger.info("[Eval][Avg]{}".format(metric_msg))
 
@@ -131,7 +135,7 @@ class Egret(object):
         return output_info[metric_key].avg
 
     def infer(self):
-        assert self.mode == "inference" and self.category == "classification"
+        assert self.mode == "inference" and self.category in ["classification","segmentation"]
         image_list = get_image_list(self.config["Infer"]["infer_imgs"])
 
         batch_size = self.config["Infer"]["batch_size"]
@@ -142,6 +146,8 @@ class Egret(object):
                 x = f.read()
             if self.preprocess_ops:
                 x = transform(x, self.preprocess_ops)
+            if self.category == 'segmentation':
+                x = x.transpose(2, 0, 1)
             batch_data.append(x)
             image_file_list.append(image_file)
             if len(batch_data) >= batch_size or idx == len(image_list) - 1:
@@ -155,7 +161,7 @@ class Egret(object):
                     out = out["output"]
                 if self.postprocess_func:
                     result = self.postprocess_func(out, image_file_list)
-                    print(result)
+                    print(result) if self.category == 'classification' else print("Segmentaion Inference Image is saved in {} ".format(result))
                 batch_data.clear()
                 image_file_list.clear()
 

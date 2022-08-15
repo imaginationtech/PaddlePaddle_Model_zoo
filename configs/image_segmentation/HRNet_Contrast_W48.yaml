@@ -1,0 +1,81 @@
+# global configs
+Global:
+  mode: evaluation    # evaluation, inference
+  category: segmentation
+  output_dir: ./output/
+  save_interval: 1
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 360
+  print_batch_step: 10
+  use_visualdl: False
+  # used for static mode and model export
+  image_shape: 
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: HRNet_Contrast_W48
+  backend: powervr_grpc   #clas_sim, paddle, powervr, powervr_grpc
+  PowerVR:
+    base_name: ./HRNet_Contrast_W48-AX2185-d16b16w16-ncsdk_2_8-arrch64_linux_gnu.ro
+    input_name: x
+    #batch_size: 1
+    output_file_name: tvm_infer_0_out_0.bin
+    output_shape: [1024, 2048]
+  PowerVR_gRPC:
+    pvr_server: 10.80.49.39
+    input_name: x
+    batch_size: 1
+    output_shape: [1024, 2048]
+  Paddle:
+    device: cpu
+    path: /home/asa/PaddleSeg/PaddleSeg/hrnet_contrast_w48
+    base_name: model 
+  ClasSim:
+    class_num: 19
+
+# data loader for train and eval
+DataLoader:
+  Eval:
+    dataset: 
+      name: CityScapesDataset
+      data_root: /home/asa/PaddleSeg/PaddleSeg/data/leftImg8bit/val
+      label_path: /home/asa/PaddleSeg/PaddleSeg/data/gtFine/val
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+        - NormalizeImage:
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+            order: ''
+    sampler:
+      name: BatchSampler
+      batch_size: 1
+      drop_last: False
+      shuffle: False
+    loader:
+      reserved: None
+
+Infer:
+  infer_imgs: dataset/inference/segment_demo.png
+  batch_size: 1
+  transforms:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - NormalizeImage:
+        mean: [0.5, 0.5, 0.5]
+        std: [0.5, 0.5, 0.5]
+        order: ''
+  PostProcess: 
+    name: SaveImages
+    save_path: inference_out/ #output file path
+
+
+Metric:
+  Eval:
+    - mIou:
+        num_classes: 19

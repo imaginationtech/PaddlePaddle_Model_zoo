@@ -11,6 +11,8 @@ from pvr_infer_cmd import PowerVR_Infer_Cmdline
 
 import numpy as np
 
+MAX_MESSAGE_LENGTH = 32*1024*1024
+
 class PVRInfer(pvr_infer_pb2_grpc.PVRInferServicer):
 
     def __init__(self, pvr_service_config):
@@ -36,7 +38,10 @@ class PVRInfer(pvr_infer_pb2_grpc.PVRInferServicer):
         return response
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=[
+            ('grpc.max_receive_message_length', MAX_MESSAGE_LENGTH), 
+            ('grpc.max_send_message_length', MAX_MESSAGE_LENGTH)
+            ])
 
     # get config
     f = open('pvr_service_config.yml', 'r')

@@ -6,6 +6,8 @@ from .pvr_grpc.generated import pvr_infer_pb2
 from .pvr_grpc.generated import pvr_infer_pb2_grpc
 from .pvr_grpc.pvr_infer_cmd import PowerVR_Infer_Cmdline
 
+MAX_MESSAGE_LENGTH = 32*1024*1024
+
 class PowerVR_Infer(object):
     def __init__(self, pvr_config):
         self.vm = pvr_config['base_name']
@@ -34,7 +36,10 @@ class PowerVR_Infer_gRPC(object):
         server = pvr_grpc_config['pvr_server']
         server += ":50051"
         #with grpc.insecure_channel(server) as channel:
-        channel =  grpc.insecure_channel(server)
+        channel =  grpc.insecure_channel(server,options=[
+            ('grpc.max_receive_message_length', MAX_MESSAGE_LENGTH), 
+            ('grpc.max_send_message_length', MAX_MESSAGE_LENGTH)
+            ])
         self.stub = pvr_infer_pb2_grpc.PVRInferStub(channel)
  
     def __call__(self, x):
