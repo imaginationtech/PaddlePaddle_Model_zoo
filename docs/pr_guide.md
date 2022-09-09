@@ -1,17 +1,17 @@
 # Code submission process
 ## Fork and clone code
-1, Go to [PowerVR Paddle Model home page](https://github.com/jiansowa/powervr_paddle_model), and click the fork button to generate a repository in your own directory, such as https://github.com/USERNAME/powervr_paddle_model.
+1, Go to [PowerVR Paddle Model home page](https://github.com/imaginationtech/PaddlePaddle_Model_zoo), and click the fork button to generate a repository in your own directory, such as https://github.com/USERNAME/powervr_paddle_model.
 2, Clone the remote repository to the local
 ```
 # Pull the code of the develop branch
-git clone https://github.com/USERNAME/powervr_paddle_model.git -b develop
+git clone https://github.com/USERNAME/PaddlePaddle_Model_zoo.git -b develop
 cd powervr_paddle_model
 ```
 
 ## Establish a connection with upstream repository
 we will create a remote connection to the original powervr_paddle_model repository and name it upstream.
 ```
-git remote add upstream https://github.com/jiansowa/powervr_paddle_model
+git remote add upstream https://github.com/imaginationtech/PaddlePaddle_Model_zool
 ```
 
 ## Create a local branch
@@ -24,7 +24,7 @@ git checkout -b new_branch upstream/develop
 Assume you make change to README.md, and hope to submit it. 
 ```
 git add README.md
-git commit -m "you commit info"
+git commit -s -m "you commit info"
 ```
 
 ## Keep the local repository up to date
@@ -40,4 +40,4 @@ git push origin new_branch
 ```
 
 ## Submit a Pull Request
-Go to https://github.com/USERNAME/powervr_paddle_model. Click new pull request, select the local branch and target branch, as shown in the figure below. In the description of the PR, fill in the functions completed by the PR. Next, wait for the review. If there is any need to modify, follow the steps above to update the corresponding branch in origin.
+Go to https://github.com/imaginationtech/PaddlePaddle_Model_zoo. Click new pull request, select the local branch and target branch, as shown in the figure below. In the description of the PR, fill in the functions completed by the PR. Next, wait for the review. If there is any need to modify, follow the steps above to update the corresponding branch in origin.

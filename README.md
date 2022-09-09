@@ -164,5 +164,16 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 
 ## Contribution
 Contributions are highly welcomed and we would really appreciate your feedback!!
+
+You are welcome to contribute to project PaddlePaddle Model Zoo based on Imagination NCSDK. In order for us to be able to accept your contributions, we will need explicit confirmation from you that you are able and willing to provide them under these terms, and the mechanism we use to do this is called a [Developer's Certificate of Origin or DCO](./docs/DCO.md). 
+
+To participate under these terms, all that you must do is include a line like the following as the last line of the commit message for each commit in your contribution:
+
+```Signed-Off-By: Random J. Developer <random@developer.example.org>```
+
+The simplest way to accomplish this is to add `-s` or `--signoff` to your `git commit` command.
+
+You must use your real name (sorry, no pseudonyms, and no anonymous contributions).
+
 [Code submission through PR](./docs/pr_guide.md)
 
