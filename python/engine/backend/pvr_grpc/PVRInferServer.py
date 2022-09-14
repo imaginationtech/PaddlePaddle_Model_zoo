@@ -46,9 +46,14 @@ class PVRInfer(pvr_infer_pb2_grpc.PVRInferServicer):
         infer_out = self.pvr_infer(infer_in)
 
         response = pvr_infer_pb2.InferResponse()
-        out = response.outputs.add()
-        out.name = "output_0"
-        out.data = infer_out[0].tobytes()
+        # out = response.outputs.add()
+        # out.name = "output_0"
+        # out.data = infer_out[0].tobytes()
+
+        for k, v in infer_out.items():
+            out = response.outputs.add()
+            out.name = k
+            out.data = v.tobytes()
         return response
 
 def serve():

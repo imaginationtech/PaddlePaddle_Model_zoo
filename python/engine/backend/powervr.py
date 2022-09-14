@@ -62,11 +62,17 @@ class PowerVR_Infer_gRPC(object):
         request.input.data = x.tobytes()
 
         response = self.stub.Inference(request)
-        outputs = list()
+        # outputs = list()
+        # for out in response.outputs:
+        #     data = np.frombuffer(out.data, dtype=np.float32)
+        #     outputs.append(data)
+        #
+        # out = outputs[0]
+        # out.shape = [self.batch_size] + self.out_shape
+
+        outputs = {}
         for out in response.outputs:
             data = np.frombuffer(out.data, dtype=np.float32)
-            outputs.append(data)
+            outputs[out.name] = data
 
-        out = outputs[0]
-        out.shape = [self.batch_size] + self.out_shape
-        return out
+        return outputs

@@ -25,10 +25,10 @@ class PowerVR_Infer_Cmdline(object):
         #self.out_file_name = pvr_config['output_file_name']
         #self.out_shape = pvr_config['output_shape']
         # del reference output files
-        self.output_number = None
+        self.output_number = pvr_config['output_num']
 
     def check_output_number(self):
-        return 1
+        return self.output_number
 
     def __call__(self, inputs):
         assert isinstance(inputs, dict)
@@ -54,10 +54,9 @@ class PowerVR_Infer_Cmdline(object):
         if self.output_number == None:
             self.output_number = self.check_output_number()
 
-        outputs = list()
+        outputs = {}
         for i in range(self.output_number):
             out_name = "tvm_infer_0_out_{}.bin".format(i)
             out = np.fromfile(out_name)
-            outputs.append(out)
-
+            outputs[out_name] = out
         return outputs

@@ -25,6 +25,7 @@ from .dataset.cityscapes_dataset import CityScapesDataset
 from .utils import create_operators
 from .postprocess import build_postprocess
 #from .preprocess import transform as preproc_transform
+from .dataset.coco_dataset import COCODataset
 
 
 def build_preprocess(params):
