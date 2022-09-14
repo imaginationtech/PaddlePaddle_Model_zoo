@@ -98,7 +98,9 @@ class Egret(object):
 
             # image input
             out = self.inference_func(batch[0])
-
+            if isinstance(out, dict) and "tvm_infer_0_out_0.bin" in out:
+                out = out["tvm_infer_0_out_0.bin"]
+                out.shape = [batch_size] + self.config["Model"]["PowerVR"]['output_shape']
             # calc metric
             if self.eval_metric_func is not None:
                 metric_dict = self.eval_metric_func(out, batch[1])
@@ -172,6 +174,9 @@ class Egret(object):
                     out = out["logits"]
                 if isinstance(out, dict) and "output" in out:
                     out = out["output"]
+                if isinstance(out, dict) and "tvm_infer_0_out_0.bin" in out:
+                    out = out["tvm_infer_0_out_0.bin"]
+                    out.shape = [len(batch_data)] + self.config["Model"]["PowerVR"]['output_shape']
                 if self.postprocess_func:
                     result = self.postprocess_func(out, image_file_list)
                     print(result) if self.category == 'classification' else print("Segmentaion Inference Image is saved in {} ".format(result))
