@@ -20,7 +20,7 @@ import importlib
 from .topk import Topk, MultiLabelTopk
 from .save_image import SaveImages
 from . import genaral
-from . import nms
+from . import nms, show_image
 from .decode import ppyoloe
 
 

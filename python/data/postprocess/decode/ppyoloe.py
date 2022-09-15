@@ -61,5 +61,6 @@ class PPYoloE(OpBase):
         y2 = np.clip(y2, 0, self.image_size[0])
         bboxes = np.concatenate([x1, y1, x2, y2], axis=-1)
         result = {"bboxes": bboxes, "scores": scores}
-        return result
+        kwargs.update(result)
+        return kwargs
 

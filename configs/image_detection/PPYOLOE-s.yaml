@@ -1,6 +1,6 @@
 # global configs
 Global:
-  mode: evaluation    # evaluation, inference
+  mode: inference    # evaluation, inference
   category: detection
   output_dir: ./output/
   save_interval: 1
@@ -67,6 +67,27 @@ DataLoader:
       shuffle: False
     loader:
       reserved: None
+
+Infer:
+  infer_imgs: C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\dog_demo.jpg
+  batch_size: 1
+  transform_ops:
+    - DecodeImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: 640
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+        order: ''
+    - ToCHWImage: { }
+  postprocess_ops:
+    - ShowImage:
+        image_size: [640, 640]
+        cls_path: C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\coco.yaml
+
 Metric:
   image_size: [640, 640]
   dataset: C:\development\paddle\PaddleDetection\tools\dataset\coco\annotations\instances_val2017.json

@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import cv2
+import numpy as np
 from data import build_dataloader
 from .backend import build_inference
 from data.transform import Transform
+from data.utils.get_image_list import get_image_list
+from data.preprocess import transform
+from data.utils import create_operators
 
 class BaseArch:
     def __init__(self, config):
@@ -27,16 +32,22 @@ class BaseArch:
         # create runtime model
         self.inference_func = build_inference(self.config)
 
-
     def infer(self):
-
-        pass
-
-    def statistic(self, **kwargs):
-        pass
-
-    def summarise(self):
-        pass
+        image_list = get_image_list(self.config["Infer"]["infer_imgs"])
+        preprocess_ops = self.config['Infer'].get('transform_ops', None)
+        preprocess_ops = create_operators(preprocess_ops)
+        postprocess_ops = self.config['Infer'].get('postprocess_ops', None)
+        postprocess = self.postprocess + Transform(postprocess_ops)
+        for i, image_file in enumerate(image_list):
+            if preprocess_ops:
+                with open(image_file, 'rb') as f:
+                    x = f.read()
+                    x = transform(x, preprocess_ops)
+            else:
+                x = cv2.imread(image_file)
+            x = np.array([x])
+            out = self.inference_func(x)
+            postprocess(**out, image_files=[image_file])
 
     def eval(self):
         for i, batch in enumerate(self.eval_dataloader):
@@ -51,10 +62,14 @@ class BaseArch:
        # self.metrics()
         self.summarise()
 
-
     def run(self):
         if self.mode == 'evaluation':
             self.eval()
         elif self.mode == 'inference':
             self.infer()
 
+    def statistic(self, **kwargs):
+        pass
+
+    def summarise(self):
+        pass
