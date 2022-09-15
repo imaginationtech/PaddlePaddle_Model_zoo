@@ -52,8 +52,9 @@ class HardNMS(OpBase):
             keepprds.append(keeppred)
 
         result = {"bboxes": keepbboxes, "scores": keepscores, "preds": keepprds}
+        kwargs.update(result)
 
-        return result
+        return kwargs
 
 
 
