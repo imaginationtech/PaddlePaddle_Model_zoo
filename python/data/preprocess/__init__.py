@@ -18,6 +18,10 @@ from .operators import CropImage
 from .operators import NormalizeImage
 from .operators import ToCHWImage
 
+from . import normalize
+from . import reader
+from . import others
+
 
 def transform(data, ops=[]):
     """ transform """
