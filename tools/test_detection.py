@@ -21,7 +21,7 @@ __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../python')))
 
 from utils import config, logger
-from engine.detection import Detection
+from engine.builder import build
 
 
 if __name__ == "__main__":
@@ -30,5 +30,5 @@ if __name__ == "__main__":
     config = config.get_config(
         args.config, overrides=args.override, show=False)
 
-    engine = Detection(config)
+    engine = build(config)
     engine.run()

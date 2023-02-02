@@ -58,8 +58,16 @@ class PowerVR_Infer_gRPC(object):
  
     def __call__(self, x):
         request = pvr_infer_pb2.InferRequest()
-        request.input.name = self.input_name
-        request.input.data = x.tobytes()
+        if isinstance(x, dict):
+            for name, value in x.items():
+                tensor = request.inputs.add()
+                tensor.name = name
+                tensor.data = value.tobytes()
+        else:
+            # For compatibility with previous versions
+            tensor = request.inputs.add()
+            tensor.name = self.input_name
+            tensor.data = x.tobytes()
 
         response = self.stub.Inference(request)
         # outputs = list()

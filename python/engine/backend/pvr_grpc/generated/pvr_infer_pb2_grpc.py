@@ -2,9 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-#import engine.backend.pvr_grpc.pvr_infer_pb2 as pvr__infer__pb2
-from . import pvr_infer_pb2 as pvr__infer__pb2
-
+from . import pvr_infer_pb2 as engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2
 
 
 class PVRInferStub(object):
@@ -18,13 +16,13 @@ class PVRInferStub(object):
         """
         self.FindService = channel.unary_unary(
                 '/pvr.PVRInfer/FindService',
-                request_serializer=pvr__infer__pb2.FindServiceRequest.SerializeToString,
-                response_deserializer=pvr__infer__pb2.FindServiceResponse.FromString,
+                request_serializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceRequest.SerializeToString,
+                response_deserializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceResponse.FromString,
                 )
         self.Inference = channel.unary_unary(
                 '/pvr.PVRInfer/Inference',
-                request_serializer=pvr__infer__pb2.InferRequest.SerializeToString,
-                response_deserializer=pvr__infer__pb2.InferResponse.FromString,
+                request_serializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferRequest.SerializeToString,
+                response_deserializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferResponse.FromString,
                 )
 
 
@@ -50,13 +48,13 @@ def add_PVRInferServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'FindService': grpc.unary_unary_rpc_method_handler(
                     servicer.FindService,
-                    request_deserializer=pvr__infer__pb2.FindServiceRequest.FromString,
-                    response_serializer=pvr__infer__pb2.FindServiceResponse.SerializeToString,
+                    request_deserializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceRequest.FromString,
+                    response_serializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceResponse.SerializeToString,
             ),
             'Inference': grpc.unary_unary_rpc_method_handler(
                     servicer.Inference,
-                    request_deserializer=pvr__infer__pb2.InferRequest.FromString,
-                    response_serializer=pvr__infer__pb2.InferResponse.SerializeToString,
+                    request_deserializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferRequest.FromString,
+                    response_serializer=engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -80,8 +78,8 @@ class PVRInfer(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/pvr.PVRInfer/FindService',
-            pvr__infer__pb2.FindServiceRequest.SerializeToString,
-            pvr__infer__pb2.FindServiceResponse.FromString,
+            engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceRequest.SerializeToString,
+            engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.FindServiceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -97,7 +95,7 @@ class PVRInfer(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/pvr.PVRInfer/Inference',
-            pvr__infer__pb2.InferRequest.SerializeToString,
-            pvr__infer__pb2.InferResponse.FromString,
+            engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferRequest.SerializeToString,
+            engine_dot_backend_dot_pvr__grpc_dot_generated_dot_pvr__infer__pb2.InferResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

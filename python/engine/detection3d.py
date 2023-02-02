@@ -12,28 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import get_op
+import numpy as np
+from .common import BaseArch
 
 
-class Transform:
-    def __init__(self, ops=None):
-        self.ops = []
-        if ops is None:
-            return
-        for op_pa in ops:
-            op_name = list(op_pa)[0]
-            op_params = op_pa.get(op_name, {})
-            op = get_op(op_name)(**op_params)
-            self.ops.append(op)
+class Detection3D(BaseArch):
+    def __init__(self, config):
+        super().__init__(config)
 
-    def __call__(self, **kwargs):
-        t = kwargs
-        for op in self.ops:
-            t = op(**t)
-        return t
+    def statistic(self, bboxes, scores, preds, targets):
+        pass
 
-    def __add__(self, other):
-        t = Transform([])
-        t.ops.extend(self.ops)
-        t.ops.extend(other.ops)
-        return t
+    def summarise(self):
+        pass
+
