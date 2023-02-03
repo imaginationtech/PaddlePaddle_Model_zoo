@@ -39,10 +39,11 @@ class PVRInfer(pvr_infer_pb2_grpc.PVRInferServicer):
         return response
 
     def Inference(self, request, context):
-        print("input name:{}".format(request.input.name))
         infer_in = dict()
-        infer_in[request.input.name] = np.frombuffer(request.input.data)
-
+        # infer_in[request.input.name] = np.frombuffer(request.input.data)
+        for tensor in request.inputs:
+            print("input name:{}".format(tensor.name))
+            infer_in[tensor.name] = np.frombuffer(tensor.data, dtype=np.float32)
         infer_out = self.pvr_infer(infer_in)
 
         response = pvr_infer_pb2.InferResponse()

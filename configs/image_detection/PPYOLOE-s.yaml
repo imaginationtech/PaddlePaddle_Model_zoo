@@ -32,11 +32,11 @@ Model:
         image_size: [640, 640]
     - HardNMS:
         iou_threshold: 0.6
-        threshold: 0.01
+        threshold: 0.5
 
   PowerVR_gRPC:
     #pvr_server: 192.168.10.4
-    pvr_server: 10.80.49.46
+    pvr_server: 10.80.51.201
     input_name: image
     output_shape: [1000]
 
@@ -69,10 +69,12 @@ DataLoader:
       reserved: None
 
 Infer:
-  infer_imgs: C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\dog_demo.jpg
+  infer_datas:
+    images:
+      - C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\dog_demo.jpg
   batch_size: 1
   transform_ops:
-    - DecodeImage:
+    - LoadImage:
         to_rgb: True
         channel_first: False
     - ResizeImage:
@@ -82,8 +84,13 @@ Infer:
         mean: [ 0.485, 0.456, 0.406 ]
         std: [ 0.229, 0.224, 0.225 ]
         order: ''
-    - ToCHWImage: { }
+    - Transpose:
+        images: [ 2, 0, 1 ]
+    - ReOutputsKey:
+        image: images
   postprocess_ops:
+    - ReOutputsKey:
+        image_files: images
     - ShowImage:
         image_size: [640, 640]
         cls_path: C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\coco.yaml

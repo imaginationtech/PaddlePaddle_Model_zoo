@@ -1,0 +1,63 @@
+# global configs
+Global:
+  mode: inference    # evaluation, inference
+  category: detection3d
+  output_dir: ./output/
+  image_shape: [3, 1280, 384]
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: SMOKE
+  backend: powervr_grpc   #clas_sim, paddle, powervr
+  head_ops:
+    - ReOutputsKey:
+        kitt_records: tvm_infer_0_out_0.bin
+    - Reshape:
+        kitt_records: [50, 14]
+    - ConfFiler:
+        kitt_records:
+          index: -1
+          conf: 0.45
+  PowerVR_gRPC:
+    pvr_server: 10.80.51.201
+    input_name: image
+    output_shape: [1000]
+
+Infer:
+  infer_datas:
+    images:
+      - C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\kitt\000000.png
+    Ks:
+      - C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\kitt\000000.txt
+    down_ratios:
+      - C:\development\workspace\PaddlePaddle_Model_zoo\dataset\inference\kitt\000000.png
+  batch_size: 1
+  transform_ops:
+    - LoadImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: [1280, 384]
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+        order: ''
+    - Transpose:
+        images: [2, 0, 1]
+    - LoadKs:
+        is_inv: True
+    - ComputeDownRatio:
+        output_size: [96, 320]
+    - BatchData: {}
+    - ReOutputsKey:
+        samples_0: images
+        samples_1: Ks
+        samples_2: down_ratios
+  postprocess_ops:
+    - ToKittRecord:
+        kitt_records: kitt_records
+    - VisualKitt: {}
+

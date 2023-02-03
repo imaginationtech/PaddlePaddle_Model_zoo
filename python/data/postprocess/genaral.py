@@ -49,3 +49,42 @@ class ReOutputsKey(OpBase):
             kwargs.pop(v)
         return kwargs
 
+
+@op_register
+class ConfFiler(OpBase):
+    """
+    K:
+        index: x
+        conf: y
+    """
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, **kwargs):
+        for k, v in self.kwargs.items():
+            data = []
+            for p in kwargs[k]:
+                if p[v['index']] > v['conf']:
+                    p = list(p)
+                    data.append(p)
+            kwargs[k] = np.array(data)
+
+        return kwargs
+
+
+@op_register
+class ToKittRecord(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, **kwargs):
+        for k in self.kwargs:
+            data = []
+            for p in kwargs[k]:
+                p = list(p)
+                p.insert(1, 0.0)
+                p.insert(2, 0)
+                data.append(p)
+            kwargs[k] = np.array(data)
+
+        return kwargs

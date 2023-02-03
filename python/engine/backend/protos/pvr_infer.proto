@@ -24,7 +24,7 @@ message Tensor	{
 }
 
 message InferRequest  {
-	Tensor input = 1;
+	repeated Tensor inputs = 1;
 }
 
 message InferResponse	{

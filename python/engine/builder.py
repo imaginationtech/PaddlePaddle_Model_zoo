@@ -12,28 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import get_op
 
+from .detection import Detection
+from .detection3d import Detection3D
 
-class Transform:
-    def __init__(self, ops=None):
-        self.ops = []
-        if ops is None:
-            return
-        for op_pa in ops:
-            op_name = list(op_pa)[0]
-            op_params = op_pa.get(op_name, {})
-            op = get_op(op_name)(**op_params)
-            self.ops.append(op)
+MODEL_MAP = {
+    'detection': Detection,
+    'detection3d': Detection3D
+}
 
-    def __call__(self, **kwargs):
-        t = kwargs
-        for op in self.ops:
-            t = op(**t)
-        return t
-
-    def __add__(self, other):
-        t = Transform([])
-        t.ops.extend(self.ops)
-        t.ops.extend(other.ops)
-        return t
+def build(config):
+    Model = MODEL_MAP.get(config['Global']['category'], None)
+    if Model is None:
+        raise ValueError('model category %s is not supported' % config['Global']['category'])
+    return Model(config)

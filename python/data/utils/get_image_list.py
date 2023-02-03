@@ -42,3 +42,21 @@ def get_image_list_from_label_file(image_path, label_file_path):
             imgs_lists.append(os.path.join(image_path, image_name))
             gt_labels.append(int(label))
     return imgs_lists, gt_labels
+
+
+def get_infer_datas(infer_datas):
+    if isinstance(infer_datas, list):
+        return infer_datas
+    elif isinstance(infer_datas, dict):
+        datas = []
+        for k, v in infer_datas.items():
+            if isinstance(v, list):
+                for i, d in enumerate(v):
+                    if len(datas) <= i:
+                        x = {k: d}
+                        datas.append(x)
+                    else:
+                        x = datas[i]
+                        x.update({k: d})
+
+        return datas
