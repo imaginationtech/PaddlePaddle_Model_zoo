@@ -1,0 +1,48 @@
+# global configs
+Global:
+  mode: inference    # evaluation, inference
+  category: detection3d
+  output_dir: ./output/
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: POINTPILLARS
+  backend: powervr_grpc   #clas_sim, paddle, powervr
+  head_ops:
+    - ReOutputsKey:
+        box_preds: tvm_infer_0_out_0.bin
+        cls_preds: tvm_infer_0_out_1.bin
+        dir_preds: tvm_infer_0_out_2.bin
+    - Reshape:
+        box_preds: [1, 107136, 7]
+        cls_preds: [1, 107136, 1]
+        dir_preds: [1, 107136, 2]
+
+  PowerVR_gRPC:
+    pvr_server: 10.80.51.217
+    input_name: velodyne
+    output_shape: [1000]
+
+Infer:
+  infer_datas:
+    velodyne:
+      - C:/Users/Zhuoran.Lv/OneDrive - Imagination Technologies/Desktop/mini kitti/kitti mini data object veloyne/testing/velodyne/000001.bin
+  batch_size: 1
+  transform_ops:
+    - LoadVelodyne:
+        num_point_dim: 4 
+    - HardVoxelize:
+        point_cloud_range: [0,-39,-3,69,39,1]
+        voxel_size: [.16,.16,4]
+        max_points_in_voxel: 32
+        max_voxel_num: 8000
+    - BatchData: {}
+  postprocess_ops:
+    - VoxelNetDecoder:
+        anchors_mask: C:/Users/Zhuoran.Lv/OneDrive - Imagination Technologies/Desktop/pointpillars/anchors_mask.npy
+        anchors: C:/Users/Zhuoran.Lv/OneDrive - Imagination Technologies/Desktop/pointpillars/anchors.npy
+    - RotateNMS:
+        iou_threshold: 0.3
+        max_keep: 5
