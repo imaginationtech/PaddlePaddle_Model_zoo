@@ -32,7 +32,17 @@ class LoadImage(OpBase):
         kwargs.update(result)
         return kwargs
 
-
+@op_register
+class LoadVelodyne(OpBase):
+    def __init__(self, num_point_dim):
+        self.num_point_dim = num_point_dim
+        
+    def __call__(self, velodyne, **kwargs):
+        points = np.fromfile(velodyne, np.float32).reshape(-1,self.num_point_dim)
+        result = {"points": points}
+        kwargs.update(result)
+        return kwargs
+    
 @op_register
 class LoadKs(OpBase):
     def __init__(self, is_inv=False):
