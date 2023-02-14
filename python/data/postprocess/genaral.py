@@ -164,3 +164,65 @@ class VoxelNetDecoder(OpBase):
         hg = np.exp(ht) * ha
         rg = rt + ra
         return np.concatenate([xg, yg, zg, wg, lg, hg, rg], axis=-1)
+    
+
+@op_register
+class CenterPointDecoder(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+    def __call__(self, **kwargs):
+        preds_dict = {}
+        for key in {"hm","height","dim","rot","reg"}:
+           preds_dict[key] = kwargs[key].transpose((0, 2, 3, 1))
+        test_cfg = self.kwargs['test_cfg']
+        kwargs['bboxes'] = self.post_processing(preds_dict, test_cfg)
+        return kwargs
+    
+    def post_processing(self, preds_dict, test_cfg):
+        batch_hm = 1/(1+(np.exp((-preds_dict['hm']))))
+        batch_dim = np.exp(preds_dict['dim'])
+        batch_rots = preds_dict['rot'][..., 0:1]
+        batch_rotc = preds_dict['rot'][..., 1:2]
+        batch_reg = preds_dict['reg']
+        batch_hei = preds_dict['height']
+
+        batch_rot = np.arctan2(batch_rots, batch_rotc)
+        batch, H, W, num_cls = batch_hm.shape
+
+        batch_reg = batch_reg.reshape([batch, H * W, 2])
+        batch_hei = batch_hei.reshape([batch, H * W, 1])
+
+        batch_rot = batch_rot.reshape([batch, H * W, 1])
+        batch_dim = batch_dim.reshape([batch, H * W, 3])
+        batch_hm = batch_hm.reshape([batch, H * W, num_cls])
+
+        xs, ys = np.meshgrid(np.arange(0, W), np.arange(0, H))
+
+        ys = ys.reshape([1, H, W]).astype(
+            batch_hm.dtype)
+        xs = xs.reshape([1, H, W]).astype(
+            batch_hm.dtype)
+
+        xs = xs.reshape([batch, -1, 1]) + batch_reg[:, :, 0:1]
+        ys = ys.reshape([batch, -1, 1]) + batch_reg[:, :, 1:2]
+        xs = xs * test_cfg['down_ratio'] * test_cfg['voxel_size'][
+            0] + test_cfg['point_cloud_range'][0]
+        ys = ys * test_cfg['down_ratio'] * test_cfg['voxel_size'][
+            1] + test_cfg['point_cloud_range'][1]
+        batch_box_preds = np.concatenate(
+                    [xs, ys, batch_hei, batch_dim, batch_rot], axis=2)
+
+        hm_preds = batch_hm[0]
+        box_preds = batch_box_preds[0]
+        post_center_range = test_cfg['post_center_limit_range']
+        scores = np.max(hm_preds, axis=-1)
+        score_mask = scores > test_cfg['score_threshold']
+        distance_mask = (box_preds[..., :3] >= post_center_range[:3]).all(1) \
+            & (box_preds[..., :3] <= post_center_range[3:]).all(1)
+        mask = distance_mask & score_mask
+        box_preds = box_preds[mask]
+        scores = scores[mask]
+        order = scores.argsort(0)[::-1]
+        box_preds = box_preds[order]
+        return box_preds
+        
