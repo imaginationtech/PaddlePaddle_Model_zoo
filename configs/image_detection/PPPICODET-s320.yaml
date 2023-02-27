@@ -1,0 +1,67 @@
+# global configs
+Global:
+  mode: inference    # evaluation, inference
+  category: detection
+  output_dir: ./output/
+  # used for static mode and model export
+  image_shape: [1, 3, 320, 320]
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: PPPICODET-s320
+  backend: powervr_grpc   #clas_sim, paddle, powervr
+  head_ops:
+    - ReOutputsKey:
+        bboxes: tvm_infer_0_out_0.bin
+        scores: tvm_infer_0_out_1.bin
+    - Reshape:
+        # (xmin, ymin, xmax, ymax)
+        bboxes: [1, 2125, 4]
+        # label 0,1,2,3 ...
+        scores: [1, 80, 2125]
+    - Transpose:
+        # bboxes: [0, 2, 1]
+        scores: [0, 2, 1]
+    - HardNMS:
+        # (label, confidence, xmin, ymin, xmax, ymax)
+        iou_threshold: 0.6
+        threshold: 0.5
+
+  PowerVR_gRPC:
+    pvr_server: 10.80.51.219
+    input_name: image
+    output_shape: [1000]
+
+Infer:
+  infer_datas:
+    images:
+      - C:\REPOS\PaddleDetection\demo\000000014439.jpg
+      # - C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\dog_demo.jpg
+  batch_size: 1
+  transform_ops:
+    - LoadImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: 320
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+        order: ''
+    - Transpose:
+        images: [ 2, 0, 1 ]
+    - ReOutputsKey:
+        image: images
+  postprocess_ops:
+    - ReOutputsKey:
+        image_files: images
+    - ShowImage:
+        image_size: [320, 320]
+        cls_path: C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\coco.yaml
+
+Metric:
+  image_size: [320, 320]
+  dataset: C:\REPOS\PaddleDetection\dataset\coco\annotations_trainval2017\annotations\instances_val2017.json
