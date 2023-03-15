@@ -161,6 +161,18 @@ python tools/test_egret.py -c ./configs/image_classification/EfficientNetB0.yaml
 |DarkNet53<br>(d16-w16-b16)|76.8|93.4|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_classification/DarkNet53-AX2185-d16w16b16-ncsdk_2_8-aarch64_linux_gnu.zip|
 |DarkNet53<br>(non-quant)|76.6|93.4|null|null|[link](https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/DarkNet53_infer.tar)|
 
+### Lidar Detection
+| Model | top-1 | top-5 | time(ms)<br>bs=1 | time(ms)<br>bs=4 | Download<br>Address |
+|:----:|:----:|:----:|:----:|:----:|:----|
+|Pointpillars<br>(d16-w16-b16)|null|null|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_detection3d/PP-Pointpillars-AX2185-d16b16w16-ncsdk_2_10-arrch64_linux_gnu.zip|
+|Centerpoint<br>(d16-w16-b16)|null|null|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_detection3d/PP-CenterPoint-AX2185-d16b16w16-ncsdk_2_10-arrch64_linux_gnu.zip.zip|
+
+
+### Image 3D Detection
+| Model | top-1 | top-5 | time(ms)<br>bs=1 | time(ms)<br>bs=4 | Download<br>Address |
+|:----:|:----:|:----:|:----:|:----:|:----|
+|Smoke<br>(d16-w16-b16)|null|null|null|null|sftp://transfer.imgtec.com/paddle_models/paddle_detection3d/SMOKE_DLA34_no_dcn-AX2185-d16b16w16-ncsdk_2_10-arrch64_linux_gnu.zip|
+
 
 ## Contribution
 Contributions are highly welcomed and we would really appreciate your feedback!!
