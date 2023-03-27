@@ -138,3 +138,13 @@ class HardVoxelize(OpBase):
                 num_points_per_voxel[voxel_idx] = curr_num_point + 1
 
         return num_voxels
+
+@op_register
+class MaskAndExpand(OpBase):
+    def __init__(self, proj_mask):
+        self.proj_mask = proj_mask
+
+    def __call__(self, samples, **kwargs):
+        if self.proj_mask is not None:
+            samples *= np.load(self.proj_mask)
+        return np.expand_dims(samples,0)

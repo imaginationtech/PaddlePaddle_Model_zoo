@@ -34,4 +34,29 @@ class NormalizeImage(OpBase):
 
         kwargs.update(result)
         return kwargs
+    
+
+@op_register
+class NormalizeRangeImage(OpBase):
+    def __init__(self,
+                 mean=None,
+                 std=None):
+        if not (isinstance(mean,
+                           (list, tuple)) and isinstance(std, (list, tuple))):
+            raise ValueError(
+                "{}: input type is invalid. It should be list or tuple".format(
+                    self))
+        self.mean = mean
+        self.std = std
+
+    def __call__(self, samples, **kwargs):
+        self.mean = np.array(self.mean).reshape(5,1,1).astype('float32')
+        self.std = np.array(self.std).reshape(5,1,1).astype('float32')
+
+        samples -= self.mean
+        samples /= self.std
+        result = {"samples": samples}
+
+        kwargs.update(result)
+        return kwargs
 

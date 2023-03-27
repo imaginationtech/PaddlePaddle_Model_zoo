@@ -225,4 +225,45 @@ class CenterPointDecoder(OpBase):
         order = scores.argsort(0)[::-1]
         box_preds = box_preds[order]
         return box_preds
-        
+
+@op_register
+class Select(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+    def __call__(self, **kwargs):
+        proj_x = np.load(self.kwargs['proj_x'])
+        proj_y = np.load(self.kwargs['proj_y'])
+        kwargs['pred_point_label'] = kwargs["pred_img_label"][0][proj_y, proj_x]
+        return kwargs
+    
+@op_register
+class VisualizePoints3D(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+    def __call__(self, **kwargs):
+        points = np.fromfile(kwargs['velodyne'], dtype=np.float32).reshape([-1, 4])
+        pred_point_label = kwargs['pred_point_label']
+        output_dir = self.kwargs['output_dir']
+        self.viz_mayavi(points, pred_point_label, output_dir)
+        return kwargs
+
+    def viz_mayavi(self, points, label, output_dir=None):
+        from mayavi import mlab
+        x = points[:, 0]  # x position of point
+        y = points[:, 1]  # y position of point
+        z = points[:, 2]  # z position of point
+        fig = mlab.figure(bgcolor=(0, 0, 0), size=(640, 360))
+        mlab.points3d(x, y, z,
+                          label,          # Values used for Color
+                          mode="point",
+                          colormap='spectral', # 'bone', 'copper', 'gnuplot'
+                          # color=(0, 1, 0),   # Used a fixed (r,g,b) instead
+                          figure=fig,
+                          )
+        if output_dir is not None:
+            import os
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            mlab.savefig(output_dir+"/result.png")
+        else: mlab.show()
+        return

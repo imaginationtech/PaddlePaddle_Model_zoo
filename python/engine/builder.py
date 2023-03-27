@@ -15,10 +15,12 @@
 
 from .detection import Detection
 from .detection3d import Detection3D
+from .segmentation3d import Segmentation3D
 
 MODEL_MAP = {
     'detection': Detection,
-    'detection3d': Detection3D
+    'detection3d': Detection3D,
+    'segmentation3d': Segmentation3D
 }
 
 def build(config):
