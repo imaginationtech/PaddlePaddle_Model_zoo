@@ -1,0 +1,49 @@
+# global configs
+Global:
+  mode: inference    # evaluation, inference
+  category: segmentation3d
+
+# model architecture
+Model:
+  name: squeezesegv3
+  backend: powervr_grpc   #clas_sim, paddle, powervr, powervr_grpc
+  head_ops:
+    - ReOutputsKey:
+        pred_img_label: tvm_infer_0_out_0.bin
+    - Reshape:
+        pred_img_label: [1, 64, 1024]
+
+  PowerVR_gRPC:
+    pvr_server: 10.80.51.219
+    input_name: samples
+    output_shape: [1, 64, 1024]
+
+Infer:
+  infer_datas:
+    velodyne:
+      - C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\SqueezeSegV3\000000.bin
+  batch_size: 1
+  transform_ops:
+    - LoadSemanticKITTIRange:
+        proj_H: 64
+        proj_W: 1024
+        upper_radian: 3.0
+        lower_radian: -25.0 
+        project_label: False
+        # labels: C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\SqueezeSegV3\000000.label
+    - NormalizeRangeImage:
+        mean: [12.12,10.88,0.23,-1.04,0.21]
+        std: [12.32,11.47,6.91,0.86,0.16 ]
+    - MaskAndExpand:
+        expand_dim: 0
+  postprocess_ops:
+    - Restoration:
+        proj_H: 64
+        proj_W: 1024
+        upper_radian: 3.0
+        lower_radian: -25.0 
+    - VisualizePoints3D:
+        bgcolor: [0,0,0]
+        size: [640, 360]
+        output_dir: ./output_dir  # save mode
+                                  # show mode if output_dir is None
