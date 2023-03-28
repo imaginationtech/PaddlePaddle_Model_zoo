@@ -141,10 +141,13 @@ class HardVoxelize(OpBase):
 
 @op_register
 class MaskAndExpand(OpBase):
-    def __init__(self, proj_mask):
-        self.proj_mask = proj_mask
+    def __init__(self, expand_dim):
+        self.expand_dim = expand_dim
 
-    def __call__(self, samples, **kwargs):
-        if self.proj_mask is not None:
-            samples *= np.load(self.proj_mask)
-        return np.expand_dims(samples,0)
+    def __call__(self, data, **kwargs):
+        if 'proj_mask' in kwargs:
+            data *= kwargs['proj_mask']
+            del kwargs['proj_mask']
+        data = np.expand_dims(data, self.expand_dim)
+        kwargs.update({"data": data})
+        return kwargs

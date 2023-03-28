@@ -227,12 +227,45 @@ class CenterPointDecoder(OpBase):
         return box_preds
 
 @op_register
-class Select(OpBase):
+class Restoration(OpBase):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+        self.kwargs['upper_inclination'] = self.kwargs['upper_radian'] / 180. * np.pi
+        self.kwargs['lower_inclination'] = self.kwargs['lower_radian'] / 180. * np.pi
+        self.kwargs['fov'] = self.kwargs['upper_inclination'] - self.kwargs['lower_inclination']
+
     def __call__(self, **kwargs):
-        proj_x = np.load(self.kwargs['proj_x'])
-        proj_y = np.load(self.kwargs['proj_y'])
+        raw_scan = np.fromfile(kwargs['velodyne'], dtype=np.float32).reshape((-1, 4))
+        points = raw_scan[:, 0:3]
+
+        # get depth of all points (L-2 norm of [x, y, z])
+        depth = np.linalg.norm(points, ord=2, axis=1)
+
+        # get angles of all points
+        scan_x = points[:, 0]
+        scan_y = points[:, 1]
+        scan_z = points[:, 2]
+        yaw = -np.arctan2(scan_y, scan_x)
+        pitch = np.arcsin(scan_z / depth)
+
+        # get projections in image coords
+        proj_x = 0.5 * (yaw / np.pi + 1.0)  # in [0.0, 1.0]
+        proj_y = 1.0 - (
+            pitch + abs(self.kwargs['lower_inclination'])) / self.kwargs['fov']  # in [0.0, 1.0]
+
+        # scale to image size using angular resolution
+        proj_x *= self.kwargs['proj_W'] # in [0.0, W]
+        proj_y *= self.kwargs['proj_H']  # in [0.0, H]
+
+        # round and clamp for use as index
+        proj_x = np.floor(proj_x)
+        proj_x = np.minimum(self.kwargs['proj_W'] - 1, proj_x)
+        proj_x = np.maximum(0, proj_x).astype(np.int32)  # in [0,W-1]
+
+        proj_y = np.floor(proj_y)
+        proj_y = np.minimum(self.kwargs['proj_H'] - 1, proj_y)
+        proj_y = np.maximum(0, proj_y).astype(np.int32)  # in [0,H-1]
+
         kwargs['pred_point_label'] = kwargs["pred_img_label"][0][proj_y, proj_x]
         return kwargs
     
@@ -244,15 +277,15 @@ class VisualizePoints3D(OpBase):
         points = np.fromfile(kwargs['velodyne'], dtype=np.float32).reshape([-1, 4])
         pred_point_label = kwargs['pred_point_label']
         output_dir = self.kwargs['output_dir']
-        self.viz_mayavi(points, pred_point_label, output_dir)
+        self.viz_mayavi(points, pred_point_label, self.kwargs['bgcolor'], self.kwargs['size'], output_dir)
         return kwargs
 
-    def viz_mayavi(self, points, label, output_dir=None):
+    def viz_mayavi(self, points, label, bgcolor, size, output_dir=None):
         from mayavi import mlab
         x = points[:, 0]  # x position of point
         y = points[:, 1]  # y position of point
         z = points[:, 2]  # z position of point
-        fig = mlab.figure(bgcolor=(0, 0, 0), size=(640, 360))
+        fig = mlab.figure(bgcolor= tuple(bgcolor), size=tuple(size))
         mlab.points3d(x, y, z,
                           label,          # Values used for Color
                           mode="point",
@@ -265,5 +298,6 @@ class VisualizePoints3D(OpBase):
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             mlab.savefig(output_dir+"/result.png")
-        else: mlab.show()
+        else: 
+            mlab.show()
         return

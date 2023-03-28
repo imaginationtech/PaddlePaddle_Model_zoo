@@ -2,6 +2,7 @@
 Global:
   mode: inference    # evaluation, inference
   category: segmentation3d
+
 # model architecture
 Model:
   name: squeezesegv3
@@ -20,21 +21,29 @@ Model:
 Infer:
   infer_datas:
     velodyne:
-      - C:\REPOS\Paddle3D\datasets\SemanticKITTI\sequences\00\velodyne\000010.bin
+      - C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\SqueezeSegV3\000000.bin
   batch_size: 1
   transform_ops:
     - LoadSemanticKITTIRange:
-        project_label: false
-        # labels: C:\REPOS\Paddle3D\datasets\SemanticKITTI\sequences\00\labels\000010.label
+        proj_H: 64
+        proj_W: 1024
+        upper_radian: 3.0
+        lower_radian: -25.0 
+        project_label: False
+        # labels: C:\REPOS\PaddlePaddle_Model_zoo\dataset\inference\SqueezeSegV3\000000.label
     - NormalizeRangeImage:
         mean: [12.12,10.88,0.23,-1.04,0.21]
         std: [12.32,11.47,6.91,0.86,0.16 ]
     - MaskAndExpand:
-        proj_mask: "proj_mask.npy"
+        expand_dim: 0
   postprocess_ops:
-    - Select:
-        proj_x: "proj_x.npy"
-        proj_y: "proj_y.npy"
+    - Restoration:
+        proj_H: 64
+        proj_W: 1024
+        upper_radian: 3.0
+        lower_radian: -25.0 
     - VisualizePoints3D:
+        bgcolor: [0,0,0]
+        size: [640, 360]
         output_dir: ./output_dir  # save mode
                                   # show mode if output_dir is None

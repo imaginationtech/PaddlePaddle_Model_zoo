@@ -38,9 +38,7 @@ class NormalizeImage(OpBase):
 
 @op_register
 class NormalizeRangeImage(OpBase):
-    def __init__(self,
-                 mean=None,
-                 std=None):
+    def __init__(self, mean, std):
         if not (isinstance(mean,
                            (list, tuple)) and isinstance(std, (list, tuple))):
             raise ValueError(
@@ -49,13 +47,12 @@ class NormalizeRangeImage(OpBase):
         self.mean = mean
         self.std = std
 
-    def __call__(self, samples, **kwargs):
+    def __call__(self, data, **kwargs):
         self.mean = np.array(self.mean).reshape(5,1,1).astype('float32')
         self.std = np.array(self.std).reshape(5,1,1).astype('float32')
-
-        samples -= self.mean
-        samples /= self.std
-        result = {"samples": samples}
+        data -= self.mean
+        data /= self.std
+        result = {"data": data}
 
         kwargs.update(result)
         return kwargs

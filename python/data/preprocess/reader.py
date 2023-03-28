@@ -35,30 +35,30 @@ class LoadImage(OpBase):
 
 @op_register
 class LoadVelodyne(OpBase):
-    def __init__(self, num_point_dim, input_name):
+    def __init__(self, num_point_dim):
         self.num_point_dim = num_point_dim
-        self.input_name = input_name
         
     def __call__(self, velodyne, **kwargs):
         points = np.fromfile(velodyne, np.float32).reshape(-1,self.num_point_dim)
-        result = {self.input_name: points}
+        result = {"points": points}
         kwargs.update(result)
         return kwargs
 
 @op_register
 class LoadSemanticKITTIRange(OpBase):
-    def __init__(self, project_label=True, labels=None):
+    def __init__(self, proj_H, proj_W, upper_radian, lower_radian, project_label=True, labels=None):
         self.project_label = project_label
-        self.proj_H = 64
-        self.proj_W = 1024
-        self.upper_inclination = 3. / 180. * np.pi
-        self.lower_inclination = -25. / 180. * np.pi
+        self.proj_H = proj_H
+        self.proj_W = proj_W
+        self.upper_inclination = upper_radian / 180. * np.pi
+        self.lower_inclination = lower_radian / 180. * np.pi
         self.fov = self.upper_inclination - self.lower_inclination
         self.labels = labels
         if labels is not None:
             ## need remap_lut npy from dataloader
-            assert(os.path.exists("../Paddle3D/remap_lut.npy"))
-            self.remap_lut = np.load("../Paddle3D/remap_lut.npy")
+            remap_path = "./dataset/inference/SqueezeSegV3/remap_lut.npy"
+            assert(os.path.exists(remap_path))
+            self.remap_lut = np.load(remap_path)
 
     def __call__(self, velodyne, **kwargs):
         raw_scan = np.fromfile(velodyne, dtype=np.float32).reshape((-1, 4))
@@ -137,11 +137,8 @@ class LoadSemanticKITTIRange(OpBase):
             proj_xyz.transpose([2, 0, 1]), proj_remission[None, ...]
         ])
         
-        kwargs.update({"samples": data})
-        
-        np.save("proj_mask.npy", proj_mask.astype(np.float32))
-        np.save("proj_x.npy", proj_x_copy)
-        np.save("proj_y.npy", proj_y_copy)
+        kwargs.update({"data": data})
+        kwargs.update({"proj_mask": proj_mask.astype(np.float32)})
 
         if self.labels is not None:
             # load labels
@@ -176,8 +173,7 @@ class LoadSemanticKITTIRange(OpBase):
                 self.labels = proj_sem_label.astype(np.int64)[None, ...]
             else:
                 self.labels = sem_label.astype(np.int64)
-            np.save("labels.npy", self.labels)
-
+            # np.save('labels.npy', self.labels) ## you can open this line to save the golden transform 
         return kwargs
 
 @op_register
