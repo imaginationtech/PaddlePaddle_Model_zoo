@@ -178,8 +178,9 @@ class LoadSemanticKITTIRange(OpBase):
 
 @op_register
 class LoadKs(OpBase):
-    def __init__(self, is_inv=False):
+    def __init__(self, is_inv=False, is_full=False):
         self.is_inv = is_inv
+        self.is_full = is_full
 
     def __call__(self, Ks, **kwargs):
         with open(Ks, 'r') as csv_file:
@@ -189,11 +190,61 @@ class LoadKs(OpBase):
                     K = row[1:]
                     K = [float(i) for i in K]
                     K = np.array(K, dtype=np.float32).reshape(3, 4)
-                    K = K[:3, :3]
+                    # K = K[:3, :3]
                     break
+        if not self.is_full:
+            K = K[:3, :3]
         if self.is_inv:
             K = np.linalg.inv(K)
         result = {"Ks": K}
         kwargs.update(result)
 
         return kwargs
+
+
+@op_register
+class LoadCalibration(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, calibration, **kwargs):
+        calib = self.load_calibration_info(calibration)
+        result = {"calib": calib}
+        kwargs.update(result)
+
+        return kwargs
+
+    @staticmethod
+    def load_calibration_info(filename):
+        with open(os.path.join(filename), 'r') as csv_file:
+            reader = list(csv.reader(csv_file, delimiter=' '))
+
+            # parse camera intrinsics from calibration table
+            p0 = [float(i) for i in reader[0][1:]]
+            p0 = np.array(p0, dtype=np.float32).reshape(3, 4)
+
+            p1 = [float(i) for i in reader[1][1:]]
+            p1 = np.array(p1, dtype=np.float32).reshape(3, 4)
+
+            p2 = [float(i) for i in reader[2][1:]]
+            p2 = np.array(p2, dtype=np.float32).reshape(3, 4)
+
+            p3 = [float(i) for i in reader[3][1:]]
+            p3 = np.array(p3, dtype=np.float32).reshape(3, 4)
+
+            # parse correction matrix for camera 0.
+            r0_rect = [float(i) for i in reader[4][1:]]
+            r0_rect = np.array(r0_rect, dtype=np.float32).reshape(3, 3)
+
+            # parse matrix from velodyne to camera
+            v2c = [float(i) for i in reader[5][1:]]
+            v2c = np.array(v2c, dtype=np.float32).reshape(3, 4)
+
+            if len(reader) == 6:
+                # parse matrix from imu to velodyne
+                i2v = [float(i) for i in reader[6][1:]]
+                i2v = np.array(i2v, dtype=np.float32).reshape(3, 4)
+            else:
+                i2v = np.array([0, 4], dtype=np.float32)
+
+        return p0, p1, p2, p3, r0_rect, v2c, i2v

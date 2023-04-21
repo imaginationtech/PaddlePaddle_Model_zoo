@@ -151,3 +151,46 @@ class MaskAndExpand(OpBase):
         data = np.expand_dims(data, self.expand_dim)
         kwargs.update({"data": data})
         return kwargs
+
+
+@op_register
+class CalibCamera2Img(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, calib, **kwargs):
+        result = {"camera2img": calib[2], "calib": calib}
+        kwargs.update(result)
+
+        return kwargs
+
+
+@op_register
+class CalibLidar2Cam(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, calib, **kwargs):
+        r0 = calib[4]  # R0_rect
+        v2c = calib[5]
+        v2c = np.vstack((v2c, np.array([0, 0, 0, 1],
+                                       dtype=np.float32)))  # (4, 4)
+        r0 = np.hstack((r0, np.zeros((3, 1), dtype=np.float32)))  # (3, 4)
+        r0 = np.vstack((r0, np.array([0, 0, 0, 1], dtype=np.float32)))  # (4, 4)
+        v2r = r0 @ v2c
+        result = {"lidar2cam": v2r, "calib": calib}
+        kwargs.update(result)
+        return kwargs
+
+
+@op_register
+class RemoveKeyItems(OpBase):
+    def __init__(self, keys=None):
+        self.keys = keys
+
+    def __call__(self, **kwargs):
+        if self.keys is not None:
+            for key in self.keys:
+                if key in kwargs:
+                    kwargs.pop(key)
+        return kwargs
