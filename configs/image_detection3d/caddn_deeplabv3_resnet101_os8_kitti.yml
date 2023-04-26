@@ -1,0 +1,67 @@
+# global configs
+Global:
+  mode: inference    # evaluation, inference
+  category: detection3d
+  output_dir: ./output/
+  image_shape: [3, 1280, 384]
+  save_inference_dir: ./inference
+
+# model architecture
+
+Model:
+  name: CADDN
+  backend: powervr_grpc   #clas_sim, paddle, powervr
+  head_ops:
+    - ReOutputsKey:
+        scores: tvm_infer_0_out_0.bin
+        bboxes: tvm_infer_0_out_1.bin
+    - Reshape:
+        bboxes: [1,157920,7]
+        scores: [1,157920,3]
+    - Sigmoid:
+        scores: scores
+    - BRotateNMS:
+        iou_threshold: 0.01
+        threshold: 0.1
+  PowerVR_gRPC:
+    pvr_server: 10.80.51.207
+    input_name: image
+    output_shape: [1000]
+
+Infer:
+  infer_datas:
+    images:
+      - C:\development\paddle\Paddle3D.bak\tools\datasets\KITTI\training\image_2\000002.png
+    calibration:
+      - C:\development\paddle\Paddle3D.bak\tools\datasets\KITTI\training\calib\000002.txt
+  batch_size: 1
+  transform_ops:
+    - LoadImage:
+        to_rgb: True
+        channel_first: False
+    - ResizeImage:
+        size: [1280, 384]
+    - NormalizeImage:
+        scale: 1.0/255.0
+        mean: [ 0.0, 0.0, 0.0 ]
+        std: [ 1.0, 1.0, 1.0 ]
+        order: ''
+    - Transpose:
+        images: [2, 0, 1]
+    - LoadCalibration: {}
+    - CalibCamera2Img: {}
+    - CalibLidar2Cam: {}
+    - RemoveKeyItems:
+        keys:
+          - calib
+    - BatchData: {}
+    - ReOutputsKey:
+        trans_cam_to_img: camera2img
+        trans_lidar_to_cam: lidar2cam
+  postprocess_ops:
+    - LoadCalibration: { }
+    - CalibLidar2Cam: { }
+    - BoxLidar2Cam: {}
+    - CalibLoadKs: {}
+    - BBox3dToKittRecord: {}
+    - VisualKitt: {}
