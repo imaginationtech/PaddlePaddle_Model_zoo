@@ -51,6 +51,20 @@ class ReOutputsKey(OpBase):
 
 
 @op_register
+class Sigmoid(OpBase):
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+    def __call__(self, **kwargs):
+        for k, v in self.kwargs.items():
+            kwargs[k] = self.sigmoid(kwargs[v])
+        return kwargs
+
+    def sigmoid(self, x):
+        return 1.0 / (1.0 + np.exp(-x))
+
+
+@op_register
 class ConfFiler(OpBase):
     """
     K:
@@ -301,3 +315,61 @@ class VisualizePoints3D(OpBase):
         else: 
             mlab.show()
         return
+
+
+@op_register
+class BoxLidar2Cam(OpBase):
+    def __init__(self):
+        pass
+
+    def __call__(self, bboxes, lidar2cam, **kwargs):
+        if not isinstance(lidar2cam, list):
+            lidar2cam = [lidar2cam]
+        for i in range(len(bboxes)):
+            bbox = bboxes[i]
+            bbox1 = bbox.copy()
+            l, w, h, r = bbox1[:, 3:4], bbox1[:, 4:5], bbox1[:, 5:6], bbox1[:, 6:7]
+            r = -r - np.pi / 2
+            bbox[:, 3:4] = l
+            bbox[:, 4:5] = h
+            bbox[:, 5:6] = w
+            bbox[:, 6:7] = r
+
+            l2c = lidar2cam[i]
+            l2ct = l2c.T
+            # l2ct_inv = np.linalg.inv(l2ct)
+            points = bbox1[:, :3]
+            pads = np.ones((bbox.shape[0], 1))
+            points = np.concatenate([points, pads], axis=1)
+            points[:, 2] -= h.reshape(-1) / 2
+            points = points @ l2ct
+            bbox[:, :3] = points[:, :3]
+
+        result = {"bboxes": bboxes}
+        kwargs.update(result)
+        return kwargs
+
+
+@op_register
+class BBox3dToKittRecord(OpBase):
+    # kitti record fields
+    # type, truncated, occluded, alpha, xmin, ymin, xmax, ymax, dh, dw, dl, lx, ly, lz, ry
+    def __init__(self, **kwargs):
+        pass
+    def __call__(self, **kwargs):
+        bboxes = kwargs['bboxes']
+        kitt_records = []
+        for i in range(len(bboxes)):
+            bbox = bboxes[i]
+            t = np.zeros(shape=[bbox.shape[0], 15], dtype=np.float32)
+            l, h, w, r = bbox[:, 3:4], bbox[:, 4:5], bbox[:, 5:6], bbox[:, 6:7]
+            t[:, 8:9] = h
+            t[:, 9:10] = w
+            t[:, 10:11] = l
+            t[:, 14:15] = r
+            t[:, 11:14] = bbox[:, 0:3]
+            kitt_records.append(t)
+        result = {"kitt_records": kitt_records}
+        kwargs.update(result)
+        return kwargs
+

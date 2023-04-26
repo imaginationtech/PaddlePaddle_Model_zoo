@@ -184,6 +184,25 @@ class CalibLidar2Cam(OpBase):
 
 
 @op_register
+class CalibLoadKs(OpBase):
+    def __init__(self, is_inv=False, is_full=False):
+        self.is_inv = is_inv
+        self.is_full = is_full
+
+    def __call__(self, **kwargs):
+        calib = kwargs["calib"]
+        K = calib[2]
+        if not self.is_full:
+            K = K[:3, :3]
+        if self.is_inv:
+            K = np.linalg.inv(K)
+        result = {"Ks": K}
+        kwargs.update(result)
+
+        return kwargs
+
+
+@op_register
 class RemoveKeyItems(OpBase):
     def __init__(self, keys=None):
         self.keys = keys

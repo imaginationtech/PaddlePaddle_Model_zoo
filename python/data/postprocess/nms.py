@@ -120,3 +120,72 @@ class HardNMS(OpBase):
             order = order[ind + 1]
 
         return keep
+
+
+@op_register
+class BRotateNMS(RotateNMS):
+    def __init__(self, iou_threshold=0.6, threshold=0.5, max_keep=100, agnostic_nms=True):
+        super().__init__(iou_threshold, threshold, max_keep)
+        self.agnostic_nms = agnostic_nms
+
+    def __call__(self, bboxes, scores, **kwargs):
+        keepbboxes, keepscores, keepprds = [], [], []
+        for bbox, score in zip(bboxes, scores):
+            if self.agnostic_nms:
+                keepbbox, keepscore, keepprd = self.class_agnostic_nms(bbox, score)
+            else:
+                keepbbox, keepscore, keepprd = self.non_class_agnostic_nms(bbox, score)
+            keepbboxes.append(keepbbox)
+            keepscores.append(keepscore)
+            keepprds.append(keepprd)
+        result = {"bboxes": keepbboxes, "scores": keepscores, "preds": keepprds}
+        kwargs.update(result)
+        return kwargs
+
+    def class_agnostic_nms(self, bbox, score):
+        pred = score.argmax(axis=-1)
+        score = score.max(axis=-1)
+        order = np.argsort(score, axis=-1)[::-1]
+        bbox = bbox[order]
+        score = score[order]
+        pred = pred[order]
+        ind = np.where(score >= self.threshold)
+        bbox = bbox[ind]
+        pred = pred[ind]
+        score = score[ind]
+        bbox1 = np.concatenate((bbox[:, :2], bbox[:, 3:5], bbox[:, 6:]), axis=-1)
+        idx = self.nms_rotate_cpu(bbox1, self.iou_threshold)
+        bbox = bbox[idx]
+        pred = pred[idx]
+        score = score[idx]
+        bbox = bbox[:self.max_keep]
+        pred = pred[:self.max_keep]
+        score = score[:self.max_keep]
+
+        return bbox, score, pred
+
+    def non_class_agnostic_nms(self, bbox, score):
+        num_box, num_cls = score.shape
+        keepbbox = np.array([]).reshape((0, 4))
+        keepscore = np.array([])
+        keeppred = np.array([])
+        for cls in range(num_cls):
+            cls_score = score[:, cls]
+            ind = np.where(cls_score >= self.threshold)
+            cls_score = cls_score[ind]
+            cls_bbox = bbox[ind]
+            order = np.argsort(cls_score, axis=-1)[::-1]
+            cls_bbox = cls_bbox[order]
+            cls_score = cls_score[order]
+            cls_bbox1 = np.concatenate((cls_bbox[:, :2], cls_bbox[:, 3:5], cls_bbox[:, 6:]), axis=-1)
+            keep = self.nms_rotate_cpu(cls_bbox1, self.iou_threshold)
+            keepbbox = np.vstack([keepbbox, cls_bbox[keep]])
+            keepscore = np.concatenate([keepscore, cls_score[keep]])
+            keeppred = np.concatenate([keeppred, np.full(shape=(len(keep),), fill_value=cls)])
+
+        indices = np.argsort(keepscore)[::-1]
+        ind = indices[:self.max_keep]
+        keepbbox = keepbbox[ind]
+        keepscore = keepscore[ind]
+        keeppred = keeppred[ind]
+        return keepbbox, keepscore, keeppred
