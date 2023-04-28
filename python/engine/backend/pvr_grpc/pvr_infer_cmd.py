@@ -14,6 +14,7 @@
 
 import os
 import numpy as np
+import subprocess
 
 
 class PowerVR_Infer_Cmdline(object):
@@ -49,7 +50,10 @@ class PowerVR_Infer_Cmdline(object):
 
         cmd += ' >> powervr_execute.log 2>&1'
         print(cmd)
-        os.system(cmd)
+        p = subprocess.Popen(cmd, shell=True)
+        p.wait()
+        if p.returncode != 0:
+            raise RuntimeError("running %s fail!, return code is %s " % (cmd, p.returncode))
 
         if self.output_number == None:
             self.output_number = self.check_output_number()

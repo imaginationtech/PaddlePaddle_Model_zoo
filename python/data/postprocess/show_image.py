@@ -78,21 +78,23 @@ class VisualKitt(OpBase):
             os.mkdir(self.output_dir)
 
     def __call__(self, kitt_records, images, Ks, **kwargs):
-        if kitt_records.size == 0:
+        if isinstance(kitt_records, np.ndarray) and kitt_records.size == 0:
             return
         if not isinstance(images, list):
             images = [images]
+        if not isinstance(kitt_records, list):
             kitt_records = [kitt_records]
         if not isinstance(Ks, list):
             Ks = [Ks]
 
         for kitt, image, K in zip(kitt_records, images, Ks):
             img = LoadImage()(image)["images"]
-            K =LoadKs()(K)["Ks"]
+            if isinstance(K, str):
+                K =LoadKs()(K)["Ks"]
             bboxes_3d = np.concatenate([kitt[:, 11:14], kitt[:, 8:11], kitt[:, 14:15]], axis=-1)
             imgpts_list = self.make_imgpts_list(bboxes_3d, K)
 
-            img = self.draw_smoke_3d(img, imgpts_list)
+            img = self.draw_3dbbox(img, imgpts_list)
             image_name = os.path.basename(image)
             image_file = os.path.join(self.output_dir, image_name)
             cv2.imwrite(image_file, img)
